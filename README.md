@@ -12,8 +12,8 @@ This is a Flask-based API that scrapes attendance data from the **LNCT portal ([
 
 ### 1. Clone the Repository
 ```sh
-git clone https://github.com/alw8n/LNCT-Data-Extractor.git
-cd LNCT-Data-Extractor
+git clone https://github.com/alw8n/LNCT-Attendance-APIs.git
+cd LNCT-Attendance-APIs
 ```
 
 ### 2. Install Dependencies
