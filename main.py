@@ -3,6 +3,7 @@ from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
 import math
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -90,4 +91,5 @@ def scrape():
     })
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000)) #Configure PORT env variable in your deployment server, if required
+    app.run(host='0.0.0.0', port=port, debug=False)
