@@ -8,7 +8,7 @@ This is a Flask-based API that scrapes attendance data from the **LNCT portal ([
 - Calculates additional classes needed to meet a target percentage.
 - Deployed using **Gunicorn** on render  
 
-## Setup & Installation
+## Setup & Installation:
 
 ### 1. Clone the Repository
 ```sh
@@ -30,22 +30,36 @@ The server will start at `http://127.0.0.1:5000`
 
 ---
 
-## 📡 API Endpoint
-### Send a `POST` request to `*serverurl*/scrape`
-**Request Body (JSON):**
+## API Reference:
+Send a `POST` request to `*serverurl*/attendance-subwise`
+### Request Body Parameters  
+
+The API expects a **JSON payload** with the following parameters:  
+
+| **Parameter**       | **Type**   | **Required**| **Description** |
+|---------------------|-----------|-------------|-------------------|----------------|
+| `username`         | string   | ✅ | Scholar Number/Username on AccSoft |
+| `password`         | string   | ✅| Password on AccSoft |
+| `targetPercent` | number  |❌ |The desired attendance percentage goal.** If omitted, the default value is 75%** |
+| `firstLogin`       | boolean  |❌ | If `true`, additional user details such as name, class, and scholar number will be included in the response, **false by default** |
+
+#### Example Request Body:  
 ```json
 {
   "username": "your_username",
   "password": "your_password",
-  "targetPercentage": 75
+  "targetPercentage": 60,
+  "firstLogin": true
 }
 ```
-
-**Response (JSON):**
+**Example Response:**
 ```json
 {
   "status": "success",
-  "overall_attendance": "85%",
+  "class": "B.Tech - C.S.E., SEC-A",
+  "name": "John Doe",
+  "overall_attendance": "75.65",
+  "scholar_no": "11111111111",
   "attendance_data": [
     {
       "subject": "Math",
@@ -59,11 +73,12 @@ The server will start at `http://127.0.0.1:5000`
 ```
 **cURL Example:**
 ```
-curl --location 'http://127.0.0.1:5000/scrape' \
+curl --location 'http://127.0.0.1:5000/attendance-subwise' \
 --header 'Content-Type: application/json' \
 --data-raw '{
            "username": "username",
            "password": "password",
-           "targetPercentage": 75
+           "targetPercentage": 75,
+           "firstLogin":true
          }  '
 ```
