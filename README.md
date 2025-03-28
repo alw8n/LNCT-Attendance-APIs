@@ -36,12 +36,13 @@ Send a `POST` request to `*serverurl*/attendance-subwise`
 
 The API expects a **JSON payload** with the following parameters:  
 
-| **Parameter**       | **Type**   | **Required**| **Description** |
-|---------------------|-----------|-------------|-------------------|----------------|
-| `username`         | string   | ✅ | Scholar Number/Username on AccSoft |
-| `password`         | string   | ✅| Password on AccSoft |
-| `targetPercent` | number  |❌ |The desired attendance percentage goal.** If omitted, the default value is 75%** |
-| `firstLogin`       | boolean  |❌ | If `true`, additional user details such as name, class, and scholar number will be included in the response, **false by default** |
+| **Parameter**       | **Type**   | **Required** | **Description** |
+|---------------------|-----------|-------------|----------------|
+| `username`         | `string`   | ✅ Yes      | Scholar Number/Username on AccSoft. |
+| `password`         | `string`   | ✅ Yes      | Password on AccSoft. |
+| `targetPercent`    | `number`   | ❌ No      | The desired attendance percentage goal. If omitted, the default value is **75%**. |
+| `firstLogin`       | `boolean`  | ❌ No      | If `true`, additional user details such as name, class, and scholar number will be included in the response. **Defaults to false.** |
+
 
 #### Example Request Body:  
 ```json
