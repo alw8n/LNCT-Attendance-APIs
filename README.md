@@ -1,12 +1,11 @@
- # LNCT AccSoft 2.0 Attendance Scraper API
+# LNCT AccSoft 2.0 Attendance Scraper API
 
-This is a Flask-based API that scrapes attendance data from the **LNCT portal ([AccSoft 2.0](https://portal.lnct.ac.in/Accsoft2/studentlogin.aspx "accsoft2.0"))** and calculates the number of classes needed to reach a desired attendance percentage. 
+This is a Flask-based API that scrapes attendance data from the **LNCT portal ([AccSoft 2.0](https://portal.lnct.ac.in/Accsoft2/studentlogin.aspx "accsoft2.0"))**, providing both subject-wise and date-wise attendance details. It also calculates the minimum number of additional classes required to achieve a desired attendance percentage in each subject.
 
 ##  Features
 - Secure login using session-based authentication.
-- Scrapes attendance data using **BeautifulSoup**.
-- Calculates additional classes needed to meet a target percentage.
-- Deployed using **Gunicorn** on render  
+- Parses attendance data using **BeautifulSoup**.
+- Calculates additional number of classes required to meet a target percentage.
 
 ## Setup & Installation:
 
@@ -26,25 +25,27 @@ pip install -r requirements.txt
 python app.py
 ```
 
-The server will start at `http://127.0.0.1:5000`
+The server will start at `http://127.0.0.1:5000` by default.
 
 ---
 
-## API Reference:
-Send a `POST` request to `*serverurl*/attendance-subwise`
-### Request Body Parameters  
+## API Reference
 
-The API expects a **JSON payload** with the following parameters:  
+### 1. `POST /attendance-subwise`
 
-| **Parameter**       | **Type**   | **Required** | **Description** |
-|---------------------|-----------|-------------|----------------|
-| `username`         | `string`   | ✅ Yes      | Scholar Number/Username on AccSoft. |
-| `password`         | `string`   | ✅ Yes      | Password on AccSoft. |
-| `targetPercent`    | `number`   | ❌ No      | The desired attendance percentage goal. If omitted, the default value is **75%**. |
-| `firstLogin`       | `boolean`  | ❌ No      | If `true`, additional user details such as name, class, and scholar number will be included in the response. **Defaults to false.** |
+Returns detailed subject-wise attendance data, including the number of additional classes required to reach a specified attendance percentage for each subject.
 
+#### Request Body Parameters
 
-#### Example Request Body:  
+| **Parameter**      | **Type**  | **Required** | **Description**                                                                                  |
+| ------------------ | --------- | ------------ | ------------------------------------------------------------------------------------------------ |
+| `username`         | `string`  | ✅ Yes        | Scholar Number/Username on AccSoft.                                                              |
+| `password`         | `string`  | ✅ Yes        | Password on AccSoft.                                                                             |
+| `targetPercentage` | `number`  | ❌ No         | The desired attendance percentage goal. Defaults to **75%**.                                     |
+| `firstLogin`       | `boolean` | ❌ No         | If `true`, returns additional details like name, class, and scholar number. Defaults to `false`. |
+
+#### Example Request
+
 ```json
 {
   "username": "your_username",
@@ -53,7 +54,9 @@ The API expects a **JSON payload** with the following parameters:
   "firstLogin": true
 }
 ```
-**Example Response:**
+
+#### Example Response
+
 ```json
 {
   "status": "success",
@@ -72,14 +75,78 @@ The API expects a **JSON payload** with the following parameters:
   ]
 }
 ```
-**cURL Example:**
+
+#### cURL Example
+
 ```
 curl --location 'http://127.0.0.1:5000/attendance-subwise' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-           "username": "username",
-           "password": "password",
-           "targetPercentage": 75,
-           "firstLogin":true
-         }  '
+  "username": "username",
+  "password": "password",
+  "targetPercentage": 75,
+  "firstLogin": true
+}'
 ```
+
+---
+
+### 📌 2. `POST /attendance-datewise`
+
+Returns date-wise attendance details for the current semester
+
+#### Request Body Parameters
+
+| **Parameter** | **Type** | **Required** | **Description**                     |
+| ------------- | -------- | ------------ | ----------------------------------- |
+| `username`    | `string` | ✅ Yes        | Scholar Number/Username on AccSoft. |
+| `password`    | `string` | ✅ Yes        | Password on AccSoft.                |
+
+#### Example Request
+
+```json
+{
+  "username": "your_username",
+  "password": "your_password"
+}
+```
+
+#### Example Response
+
+```json
+{
+  "status": "success",
+  "start_date": "2024-01-01",
+  "end_date": "2024-03-01",
+  "datewise": {
+    "2024-02-01": [
+      {
+        "SNo": 1,
+        "Subject": "Physics",
+        "Period": 1,
+        "Status": "P"
+      },
+      {
+        "SNo": 2,
+        "Subject": "Maths",
+        "Period": 2,
+        "Status": "A"
+      }
+    ]
+  }
+}
+```
+
+#### cURL Example
+
+```
+curl --location 'http://127.0.0.1:5000/attendance-datewise' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "username": "username",
+  "password": "password"
+}'
+```
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
